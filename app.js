@@ -30,4 +30,5 @@ app.listen(port ,function(){
 });
 // routes
 // login
-var logRouter = require('./routes/login/login.js')(app,connection);
+var loginRouter = require('./routes/login/login.js')(app,connection);
+var joinRouter = require('./routes/login/join.js')(app,connection);
