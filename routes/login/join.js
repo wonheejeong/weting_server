@@ -71,7 +71,7 @@ module.exports = function(app, connection)
    
 
     //join
-    app.post('login/join',function(req, res, next){
+    app.post('/login/join',function(req, res, next){
         console.log('post /login/join');
         var user_passwd = req.body.user_passwd;
         var user_birth = req.body.user_birth;
