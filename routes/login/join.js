@@ -1,11 +1,11 @@
 module.exports = function(app, connection)
 {
 
-    app.get('/join', function(req, res, next){
+    app.get('/login/join', function(req, res, next){
         console.log("hello");
     });
     //eamil 중복 확인
-    app.post('/join/check/email',function(req, res, next){
+    app.post('/login/join/check/email',function(req, res, next){
         console.log('post /join/check/email');
         var user_email = req.body.user_email;
         var sql = 'SELECT * FROM users where user_email = ?;';
@@ -38,8 +38,8 @@ module.exports = function(app, connection)
     });
 
     //nickname 중복 확인
-    app.post('/join/check/nickname',function(req, res, next){
-        console.log('post /join/check/nickname');
+    app.post('/login/join/check/nickname',function(req, res, next){
+        console.log('post /login/join/check/nickname');
         var user_nick_name = req.body.user_nick_name;
         var sql = 'SELECT * FROM weting.users where user_nick_name = ?;';
         connection.query(sql,user_nick_name, function (error, result,fields){
@@ -71,8 +71,8 @@ module.exports = function(app, connection)
    
 
     //join
-    app.post('/join',function(req, res, next){
-        console.log('post /join');
+    app.post('login/join',function(req, res, next){
+        console.log('post /login/join');
         var user_passwd = req.body.user_passwd;
         var user_birth = req.body.user_birth;
         var user_email = req.body.user_email;
