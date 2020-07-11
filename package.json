@@ -24,6 +24,8 @@
     "multer": "^1.4.2",
     "multer-s3": "^2.9.0",
     "mysql": "^2.18.1",
-    "session-file-store": "^1.4.0"
+    "session-file-store": "^1.4.0",
+    "swagger-ui": "^3.28.0",
+    "swagger-ui-express": "^4.1.4"
   }
 }

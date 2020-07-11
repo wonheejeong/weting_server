@@ -5,6 +5,8 @@ var config = require('./db_info.js').local;
 var session = require('express-session');
 const FileStore = require('session-file-store')(session);
 var app = express();
+const path = require('path');
+app.use('/swagger-ui', express.static(path.join(__dirname, './node_modules/swagger-ui/dist')));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(session({
