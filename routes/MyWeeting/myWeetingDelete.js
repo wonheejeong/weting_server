@@ -56,7 +56,7 @@ module.exports = function(app, connection){
                             });
                         }else{
                             res.status(200).json({
-                                'state':200
+                                'state':200,
                                 'message':'모임 삭제 성공'
                             });
                         }

@@ -14,11 +14,10 @@ module.exports = function(app, connection){
                 })
             }
             else{
-                res.render('meetingForm', {data : rows});
-                // res.status(200).json({
-                //     'state':200,
-                    //'meeting_interests':rows
-                    //});
+                res.status(200).json({
+                    'state':200,
+                    'message':'접속 성공'
+                    });
             }
         });
     });
