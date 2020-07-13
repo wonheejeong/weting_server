@@ -48,7 +48,6 @@ app.post('/login/login', function(req, res){
                     res.json({
                     'state': 200,
                     'message': "로그인 성공"
-
                     });
                 } else {
                     res.json({
@@ -61,7 +60,6 @@ app.post('/login/login', function(req, res){
                 res.json({
                 'state': 350,
                 'message': "로그인 실패-존재하지 않는 eamil"
-
                 });
             }
         }
