@@ -26,8 +26,8 @@ module.exports = function(app, connection){
                         }
                         else{
                             if(rows.length==0){
-                                res.status(300).json({
-                                    'state':300,
+                                res.status(404).json({
+                                    'state':404,
                                     'message':'내가 만든 모임 없음'
                                 });
                             }

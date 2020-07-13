@@ -39,7 +39,6 @@ module.exports = function(app, connection){
                                 res.status(200).json({
                                     'state':200,
                                     'message':'모임 조회 성공',
-                                    'data':rows[id-1]
                                 });
                             }
                         }
@@ -95,6 +94,10 @@ module.exports = function(app, connection){
                                     connection.query(img_select_sql, [user_id], (err, result, fields)=>{
                                         if(err){
                                             console.log(err)
+                                            res.status(500).json({
+                                                'state':500,
+                                                'message':'서버 에러'
+                                            })
                                         }
                                         else{
                                             var meeting_img = (result[0].length==0) ? null : result[0].meeting_img;

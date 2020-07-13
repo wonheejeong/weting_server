@@ -91,44 +91,36 @@ module.exports = function(app, connection){
                             });
                         }
                         else{
-                            if(rows.length==0){
-                                res.status(300).json({
-                                    'state':300,
+                            if(rows.length==0 || id> rows.length || id==0){
+                                res.status(404).json({
+                                    'state':404,
                                     'message':'삭제할 모임 없음'
                                 });
                             }
                             else{
-                                if(id>rows.length || id==0){
-                                    res.status(404).json({
-                                        'state':404,
-                                        'message':id+'번째 모임 없음'
-                                    });
-                                }
-                                else{
-                                    var delete_meeting = rows[id-1].meeting_id;
-                                    var delete_sql = 'DELETE FROM meeting WHERE meeting_id=?';
-                                    connection.query(delete_sql, [delete_meeting], (err, rows, fields)=>{
-                                        if(err){
-                                            console.log(err);
-                                            res.status(500).json({
-                                                'state':500,
-                                                'message':'서버 에러'
-                                            });
-                                        }
-                                        else{
-                                            res.status(200).json({
-                                                'state':200,
-                                                'message':'삭제 성공'
-                                            });
-                                        }
-                                    })
-                                }
+                                var delete_meeting = rows[id-1].meeting_id;
+                                var delete_sql = 'DELETE FROM meeting WHERE meeting_id=?';
+                                connection.query(delete_sql, [delete_meeting], (err, rows, fields)=>{
+                                    if(err){
+                                        console.log(err);
+                                        res.status(500).json({
+                                            'state':500,
+                                            'message':'서버 에러'
+                                        });
+                                    }
+                                    else{
+                                        res.status(200).json({
+                                            'state':200,
+                                            'message':'삭제 성공'
+                                        });
+                                    }
+                                });
                             }
                         }
                     });
                 }
             });
-        }
+        }   
         else{
             res.status(300).json({
                 'state':300,

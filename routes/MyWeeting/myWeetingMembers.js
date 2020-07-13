@@ -38,7 +38,11 @@ module.exports = function(app, connection){
                                     var select_participant_sql = 'SELECT fk_participant_id FROM meeting_participants WHERE fk_meeting_id=?';
                                     connection.query(select_participant_sql, [meeting_id], (err, rows, fields)=>{
                                         if(err){
-                                            console.log(err)
+                                            console.log(err);
+                                            res.status(500).json({
+                                                'state':500,
+                                                'message':'서버 에러'
+                                            });
                                         }
                                         else{
                                             res.status(200).json({
