@@ -45,4 +45,4 @@ var myWeetingDeleteRouter = require('./routes/MyWeeting/myWeetingDelete.js')(app
 
 var myWeetingUpdateRouter = require('./routes/MyWeeting/myWeetingUpdate.js')(app, connection);
 
-var myWeetingMembersRouter = require('./routes/myWeeting/myWeetingMembers.js')(app, connection);
+var myWeetingMembersRouter = require('./routes/MyWeeting/myWeetingMembers.js')(app, connection);
