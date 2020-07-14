@@ -35,6 +35,10 @@ app.listen(port ,function(){
 var loginRouter = require('./routes/login/login.js')(app,connection);
 var joinRouter = require('./routes/login/join.js')(app,connection);
 
+//recommend
+var interestRouter = require('./routes/recommend/interests.js')(app,connection);
+var recommendRouter = require('./routes/recommend/recommend.js')(app,connection);
+
 //create meeting
 var NewWeetingRouter = require('./routes/createMeeting/create.js')(app, connection);
 
