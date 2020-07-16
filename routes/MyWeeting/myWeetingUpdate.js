@@ -120,7 +120,7 @@ module.exports = function(app, connection){
                                     else{
                                         res.status(200).json({
                                             'state':200,
-                                            'message' : '수정 성공',
+                                            'message' : '수정 성공'
                                         });
                                     }
                                 });
