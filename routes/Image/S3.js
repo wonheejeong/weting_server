@@ -10,9 +10,9 @@ module.exports = function(){
     let upload = multer({
         storage : multerS3({
             s3 : s3, 
-            bucket : "meeting-img",
+            bucket : "weeting",
             key : function(req, file, cb){
-                cb(null, Date.now().toString()+'.png');
+                cb(null, "meeting_img/"+Date.now().toString()+'.png');
             },
             acl : 'public-read-write',
             ContentType:'image/png',
