@@ -35,6 +35,7 @@ module.exports = function(app, connection){
                                 res.status(200).json({
                                     'state':200,
                                     'message': '조회 성공',
+                                    'data': rows
                                 });
                             }
                         }

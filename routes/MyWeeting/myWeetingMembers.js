@@ -34,8 +34,8 @@ module.exports = function(app, connection){
                                     });
                                 }
                                 else{
-                                    var meeting_id = rows[id-1].meeting_id
-                                    var select_participant_sql = 'SELECT fk_participant_id FROM meeting_participants WHERE fk_meeting_id=?';
+                                    var meeting_id = rows[id-1].meeting_id;
+                                    var select_participant_sql = 'SELECT fk_participant_id from meeting_participants WHERE fk_meeting_id=?'
                                     connection.query(select_participant_sql, [meeting_id], (err, rows, fields)=>{
                                         if(err){
                                             console.log(err);
@@ -47,7 +47,8 @@ module.exports = function(app, connection){
                                         else{
                                             res.status(200).json({
                                                 'state':200,
-                                                'message':'조회 성공'
+                                                'message':'조회 성공',
+                                                'data':rows
                                             });
                                         }
                                     })

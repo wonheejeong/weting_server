@@ -45,7 +45,8 @@ module.exports = function(app, connection){
                                 else{
                                     res.status(200).json({
                                         'state':200,
-                                        'message':'조회 성공'
+                                        'message':'조회 성공',
+                                        'data': rows[0]
                                     });
                                 }
                             }
