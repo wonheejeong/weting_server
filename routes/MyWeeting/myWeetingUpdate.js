@@ -39,6 +39,7 @@ module.exports = function(app, connection){
                                 res.status(200).json({
                                     'state':200,
                                     'message':'모임 조회 성공',
+                                    'data':rows[0]
                                 });
                             }
                         }
@@ -105,7 +106,7 @@ module.exports = function(app, connection){
                                     });
                                 }
                                 else{
-                                    var meeting_img = req.file.location
+                                    var meeting_img = req.file.location;
                                 }
                                 var update_sql = 'UPDATE meeting SET fk_meeting_interest=?, meeting_name=?, meeting_description=?, meeting_location=?, meeting_recruitment=?, meeting_time=?, age_limit_min=?, age_limit_max=?, meeting_img=? WHERE meeting_id=?';
                                 connection.query(update_sql, [body.fk_meeting_interest, body.meeting_name, body.meeting_description, body.meeting_location, body.meeting_recruitment, body.meeting_time, body.age_limit_min, body.age_limit_max, meeting_img, meetings[id-1].meeting_id], (err, rows, fields)=>{
@@ -119,7 +120,7 @@ module.exports = function(app, connection){
                                     else{
                                         res.status(200).json({
                                             'state':200,
-                                            'message' : '수정 성공'
+                                            'message' : '수정 성공',
                                         });
                                     }
                                 });

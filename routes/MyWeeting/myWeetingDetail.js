@@ -37,6 +37,7 @@ module.exports = function(app, connection){
                                 res.status(200).json({
                                     'state':200,
                                     'message':'모임 상세 정보 조회 성공',
+                                    'data':rows[id-1]
                                 });
                             }
                             }
