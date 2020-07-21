@@ -1,6 +1,6 @@
 module.exports = function(app, connection){
     var Image = require('../Image/S3.js');
-    var upload = Image();
+    var upload = Image('meeting_img/');
 
     //모임 생성 페이지
     app.get('/newWeeting', (req, res)=>{
