@@ -1,4 +1,4 @@
-module.exports = function(){
+module.exports = function(dir){
     var multer = require('multer');
     var multerS3 = require('multer-s3');
     const AWS = require("aws-sdk");
@@ -12,7 +12,7 @@ module.exports = function(){
             s3 : s3, 
             bucket : "weeting",
             key : function(req, file, cb){
-                cb(null, "meeting_img/"+Date.now().toString()+'.png');
+                cb(null, dir+Date.now().toString()+'.png');
             },
             acl : 'public-read-write',
             ContentType:'image/png',

@@ -13,6 +13,10 @@ function randomString() {
 module.exports = function(app, connection)
 {   
     const nodemailer = require('nodemailer');
+    var mailconfig = require('../../config/mailconfig.json');
+    var Image = require('../Image/S3.js');
+    var upload = Image('user_img/');
+
 
     app.get('/login/join', function(req, res, next){
         console.log("hello");
@@ -84,21 +88,22 @@ module.exports = function(app, connection)
    
 
     //join
-    app.post('/login/join',function(req, res, next){
+    app.post('/login/join',upload.single('user_img'),function(req, res, next){
         console.log('post /login/join');
         var user_passwd = req.body.user_passwd;
         var user_birth = req.body.user_birth;
         var user_email = req.body.user_email;
         var user_name = req.body.user_name;
         var user_nick_name = req.body.user_nick_name;
-
+        var user_img = (req.file == undefined) ? null : req.file.location; 
         var sql = 'INSERT INTO users SET ?;';
         var params = {
             "user_passwd" : user_passwd,
             "user_birth" : user_birth,
             "user_email" : user_email,
             "user_name" : user_name,
-            "user_nick_name" : user_nick_name
+            "user_nick_name" : user_nick_name,
+            "user_img" : user_img
 
         };
         connection.query(sql,params, function (error, result,fields){
@@ -127,13 +132,13 @@ module.exports = function(app, connection)
         let transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: {
-            user: 'weting.korea@gmail.com',  
-            pass: 'dnltptdnlxld!'         
+            user: mailconfig.email,  
+            pass: mailconfig.password     
           }
         });
       
         let mailOptions = {
-          from: 'weting.korea@gmail.com',    
+          from: mailconfig.email,    
           to: user_email ,                     
           subject: '위팅: 회원가입 인증번호 안내',   
           html: '<p>안녕하세요.<br>여성들의 안전한 취미 공유 서비스 "위팅"입니다.<br>아래의 인증번호를 입력해 회원가입을 완료해주세요 !</p><br><br>' +
