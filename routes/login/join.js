@@ -1,5 +1,18 @@
+function randomString() {
+    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+    var string_length = 15;
+    var randomstring = '';
+    for (var i=0; i<string_length; i++) {
+    var rnum = Math.floor(Math.random() * chars.length);
+    randomstring += chars.substring(rnum,rnum+1);
+    }
+    //document.randform.randomfield.value = randomstring;
+    return randomstring;
+    }
+
 module.exports = function(app, connection)
-{
+{   
+    const nodemailer = require('nodemailer');
 
     app.get('/login/join', function(req, res, next){
         console.log("hello");
@@ -104,5 +117,49 @@ module.exports = function(app, connection)
             }
         });
     });
+
+    //이메일 인증
+    app.post("/login/join/auth/email", function(req, res, next){
+        console.log("/login/join/auth/email");
+        let user_email = req.body.user_email;
+        var token = randomString();
+      
+        let transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'weting.korea@gmail.com',  
+            pass: 'dnltptdnlxld!'         
+          }
+        });
+      
+        let mailOptions = {
+          from: 'weting.korea@gmail.com',    
+          to: user_email ,                     
+          subject: '위팅: 회원가입 인증번호 안내',   
+          html: '<p>안녕하세요.<br>여성들의 안전한 취미 공유 서비스 "위팅"입니다.<br>아래의 인증번호를 입력해 회원가입을 완료해주세요 !</p><br><br>' +
+          "<b>인증번호: "+token+"</b>"
+        };
+      
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+            console.log(error);
+            res.json({
+                'state': 400,
+                'message':'이메일 발신 실패'
+                });
+          }
+          else {
+            console.log('Email sent: ' + info.response);
+            res.json({
+                'state': 200,
+                'token': token,
+                'message':'이메일 발신 성공'
+                });
+          }
+        });
+      
+        
+      })
+
 
 }
