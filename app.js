@@ -56,6 +56,9 @@ var myWeetingMembersRouter = require('./routes/MyWeeting/myWeetingMembers.js')(a
 //search 
 var searchRouter = require('./routes/search/search.js')(app, connection);
 
-var moreCategoryRouter = require('./routes/search/moreCategory.js')(app, connection);
+var fullCategoryRouter = require('./routes/search/fullCategory.js')(app, connection);
 
 var categoryRouter = require('./routes/search/category.js')(app, connection);
+
+var searchResultRouter = require('./routes/search/searchResult.js')(app, connection);
+

@@ -1,10 +1,10 @@
 module.exports = function(app, connection){
-    //검색 및 모임 많은 순 상위 카테고리 8개 조회
+    //전체 카테고리 조회
     
-    app.get('/searchview', (req, res)=>{
+    app.get('/fullCategory', (req, res)=>{
         if(req.session.logined){
-            var sql = 'select meeting_interests.interests_name as name, count(meeting_interests.interests_id) as cnt_id from meeting_interests, meeting where meeting_interests.interests_id = meeting.fk_meeting_interest group by interests_id order by cnt_id desc';        
-            connection.query(sql, (err, rows, fields)=>{
+            var select_sql = 'select * from meeting_interests';
+            connection.query(select_sql, (err, rows, fields)=>{
                 if(err){
                     console.log(err);
                     res.json({
@@ -13,11 +13,10 @@ module.exports = function(app, connection){
                     });
                 }
                 else{
-                    var category = (rows.length > 8) ? rows.slice(0,8): rows;
                     res.json({
                         'state':200,
                         'message':'조회 성공',
-                        'data':category
+                        'data':rows
                     });
                 }
             });

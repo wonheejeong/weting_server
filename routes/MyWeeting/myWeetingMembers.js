@@ -8,7 +8,7 @@ module.exports = function(app, connection){
                 connection.query(select_sql, [req.session.user_email], (err, rows, fields)=>{
                     if(err){
                         console.log(err);
-                        res.status(500).json({
+                        res.json({
                             'state':500,
                             'message':'서버 에러'
                         });
@@ -20,7 +20,7 @@ module.exports = function(app, connection){
                         connection.query(select_meeting_sql, [user_id], (err, rows, fields)=>{
                             if(err){
                                 console.log(err);
-                                res.status(500).json({
+                                res.json({
                                     'state':500,
                                     'message':'서버 에러'
                                 });
@@ -28,7 +28,7 @@ module.exports = function(app, connection){
                             else{
                                 if(rows.length==0 || id > rows.length || id==0){
                                     //내가 만든 모임 없음
-                                    res.status(404).json({
+                                    res.json({
                                         'state':404,
                                         'message':'해당 모임 없음'
                                     });
@@ -39,13 +39,13 @@ module.exports = function(app, connection){
                                     connection.query(select_participant_sql, [meeting_id], (err, rows, fields)=>{
                                         if(err){
                                             console.log(err);
-                                            res.status(500).json({
+                                            res.json({
                                                 'state':500,
                                                 'message':'서버 에러'
                                             });
                                         }
                                         else{
-                                            res.status(200).json({
+                                            res.json({
                                                 'state':200,
                                                 'message':'조회 성공',
                                                 'data':rows
@@ -59,7 +59,7 @@ module.exports = function(app, connection){
                 });
         }
         else{
-            res.status(300).json({
+            res.json({
                 'state':300,
                 'message':'로그인 필요'
             });

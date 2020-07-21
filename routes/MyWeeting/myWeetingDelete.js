@@ -11,7 +11,7 @@ module.exports = function(app, connection){
             connection.query(select_sql, [user_email], (err, rows, fields)=>{
                 if(err){
                     console.log(err);
-                    res.status(500).json({
+                    res.json({
                         'state':500,
                         'message':'서버 에러'
                     });
@@ -23,110 +23,56 @@ module.exports = function(app, connection){
                     connection.query(select_meeting_sql, [user_id], (err, rows, fields)=>{
                         if(err){
                             console.log(err);
-                            res.status(500).json({
+                            res.json({
                                 'state':500,
                                 'message':'서버 에러'
                             });
                         }
                         else{
-                            if(rows.length==0){
-                                res.status(300).json({
-                                    'state':300,
-                                    'message':'삭제할 모임 없음'
-                                });
-                            }
-                            else{
-                                if(id>rows.length || id==0){
-                                    res.status(404).json({
-                                        'state':404,
-                                        'message':id+'번째 모임 없음'
-                                    });
-                                }
-                                else{
-                                    res.status(200).json({
-                                        'state':200,
-                                        'message':'조회 성공',
-                                        'data': rows[0]
-                                    });
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        }
-        else{
-            res.status(300).json({
-                'state':300,
-                'message':'로그인 필요'
-            });
-        }
-    });
-
-    //delete 전송
-    app.post('/myWeetingDelete/:id', (req, res)=>{
-        //id = myweeting list No.
-        var id=req.params.id;
-        if(req.session.logined){
-            //로그인 상태
-            var user_email = req.session.user_email;
-            var select_sql = 'SELECT user_id FROM users WHERE user_email = ?';
-            connection.query(select_sql, [user_email], (err, rows, fields)=>{
-                if(err){
-                    console.log(err);
-                    res.status(500).json({
-                        'state':500,
-                        'message':'서버 에러'
-                    });
-                }
-                else{
-                    //user_id 조회
-                    var user_id = rows[0].user_id;
-                    var select_meeting_sql = 'SELECT * FROM meeting WHERE fk_captain_id=?';
-                    connection.query(select_meeting_sql, [user_id], (err, rows, fields)=>{
-                        if(err){
-                            console.log(err);
-                            res.status(500).json({
-                                'state':500,
-                                'message':'서버 에러'
-                            });
-                        }
-                        else{
-                            if(rows.length==0 || id> rows.length || id==0){
-                                res.status(404).json({
+                            if(rows.length == 0 || id > rows.length || id==0){
+                                res.json({
                                     'state':404,
                                     'message':'삭제할 모임 없음'
                                 });
                             }
                             else{
-                                var delete_meeting = rows[id-1].meeting_id;
-                                var delete_sql = 'DELETE FROM meeting WHERE meeting_id=?';
-                                connection.query(delete_sql, [delete_meeting], (err, rows, fields)=>{
-                                    if(err){
-                                        console.log(err);
-                                        res.status(500).json({
-                                            'state':500,
-                                            'message':'서버 에러'
-                                        });
-                                    }
-                                    else{
-                                        res.status(200).json({
-                                            'state':200,
-                                            'message':'삭제 성공'
-                                        });
-                                    }
+                                res.json({
+                                    'state':200,
+                                    'message':'조회 성공',
+                                    'data': rows[id-1]
                                 });
                             }
-                        }
+                            }
                     });
                 }
             });
-        }   
+        }
         else{
-            res.status(300).json({
+            res.json({
                 'state':300,
-                'message':'로그인 필요'
+                'message':'로그아웃 상태'
             });
         }
+    });
+
+    //delete 전송
+    app.post('/myWeetingDelete', (req, res)=>{
+        var meeting_id = req.body.meeting_id;
+        var delete_sql = 'delete from meeting where meeting_id=?';
+        connection.query(delete_sql, [meeting_id], (err, rows, fields)=>{
+            if(err){
+                console.log(err);
+                res.json({
+                    'state':500,
+                    'message':'서버 에러'
+                });
+            }
+            else{
+                res.json({
+                    'state':200,
+                    'message':'삭제 성공'
+                });
+            }
+        });
     });
 }
