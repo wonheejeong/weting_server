@@ -1,12 +1,12 @@
 module.exports = function(app, connection)
 {
-    app.post('/edit/interests',function(req, res, next){
-        console.log('post /edit/interests');
+    app.post('/mypage/edit/password',function(req, res, next){
+        console.log('post /mypage/edit/password');
         var user_email = req.body.user_email;
-        var user_interests = req.body.user_interests;
+        var user_passwd = req.body.user_passwd;
 
-        var sql = 'UPDATE users SET user_interests = ? WHERE user_email =?;';
-        connection.query(sql,[user_interests, user_email], function (error, result,fields){
+        var sql = 'UPDATE users SET user_passwd = ? WHERE user_email =?;';
+        connection.query(sql,[user_passwd, user_email], function (error, result,fields){
             if(error) {
                 res.json({
                 'state': 400,
@@ -17,7 +17,7 @@ module.exports = function(app, connection)
             else{
                 res.json({
                     'state': 200,
-                    'message':'관심사 수정 성공'
+                    'message':'비밀번호 변경 성공'
                     });
             }
         });

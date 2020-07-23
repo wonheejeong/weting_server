@@ -7,7 +7,8 @@ CREATE TABLE `users` (
   `user_status` tinyint(4) DEFAULT '0',
   `user_birth` datetime DEFAULT NULL,
   `user_nick_name` varchar(100) NOT NULL,
-  `user_interests` varchar(255) DEFAULT NULL
+  `user_interests` varchar(255) DEFAULT NULL,
+  `user_introduce` varchar(225) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_nick_name_UNIQUE` (`user_nick_name`),
   UNIQUE KEY `user_email_UNIQUE` (`user_email`)

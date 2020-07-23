@@ -35,14 +35,22 @@ app.listen(port ,function(){
 var loginRouter = require('./routes/login/login.js')(app,connection);
 var joinRouter = require('./routes/login/join.js')(app,connection);
 
+//myPage
+var myPageRouter = require('./routes/myPage/myPage.js')(app,connection);
+var contactRouter = require('./routes/myPage/contact.js')(app,connection);
+var interestRouter = require('./routes/myPage/edit/interests.js')(app,connection);
+var imageRouter = require('./routes/myPage/edit/image.js')(app,connection);
+var passwordRouter = require('./routes/myPage/edit/password.js')(app,connection);
+var introduceRouter = require('./routes/myPage/edit/introduce.js')(app,connection);
+
+
 //recommend
-var interestRouter = require('./routes/recommend/interests.js')(app,connection);
 var recommendRouter = require('./routes/recommend/recommend.js')(app,connection);
 
 //create meeting
 var NewWeetingRouter = require('./routes/createMeeting/create.js')(app, connection);
 
-//my page
+//myWeeting
 var myWeetingRouter = require('./routes/MyWeeting/myWeeting.js')(app, connection);
 
 var myWeetingDetailRouter = require('./routes/MyWeeting/myWeetingDetail.js')(app, connection);
