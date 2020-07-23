@@ -36,7 +36,6 @@ module.exports = function(app, connection)
                 console.error('error', error);
             }else{
                 if(result.length ==0){
-                    console.log(req.body);
                     res.json({
                         'state': 200,
                         'message':'email 중복 아님'
