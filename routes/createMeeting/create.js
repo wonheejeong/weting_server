@@ -46,8 +46,7 @@ module.exports = function(app, connection){
             else{
                 var user_id=rows[0].user_id;
                 var body = req.body;
-                var meeting_img = (req.file == undefined) ? null : req.file.location; 
-
+                var meeting_img = (req.file == undefined) ? null : req.file.location;
                 var queries = {
                     'fk_meeting_interest':body.fk_meeting_interest,
                     'fk_captain_id':user_id,

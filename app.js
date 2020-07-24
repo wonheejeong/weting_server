@@ -66,7 +66,9 @@ var searchRouter = require('./routes/search/search.js')(app, connection);
 
 var fullCategoryRouter = require('./routes/search/fullCategory.js')(app, connection);
 
-var categoryRouter = require('./routes/search/category.js')(app, connection);
-
 var searchResultRouter = require('./routes/search/searchResult.js')(app, connection);
 
+//weetings
+var weetingsRouter = require('./routes/weetings/weetings.js')(app, connection);
+
+var weetingCategoryRouter = require('./routes/weetings/weetingCategory.js')(app, connection);
