@@ -76,7 +76,6 @@ module.exports = function(app, connection){
                                     });
                                 }
                                 else{
-                                    console.log(rows);
                                     res.json({
                                         'state':200,
                                         'message':'조회 성공',
