@@ -61,6 +61,8 @@ var myWeetingUpdateRouter = require('./routes/MyWeeting/myWeetingUpdate.js')(app
 
 var myWeetingMembersRouter = require('./routes/MyWeeting/myWeetingMembers.js')(app, connection);
 
+var myWeetingMemberDetailRouter = require('./routes/MyWeeting/memberDetail.js')(app, connection);
+
 //search 
 var searchRouter = require('./routes/search/search.js')(app, connection);
 

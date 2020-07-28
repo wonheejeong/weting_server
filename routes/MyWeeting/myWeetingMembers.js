@@ -34,8 +34,8 @@ module.exports = function(app, connection){
                                     });
                                 }
                                 else{
-                                    var meeting_id = rows[id-1].meeting_id;
-                                    var select_participant_sql = 'SELECT fk_participant_id from meeting_participants WHERE fk_meeting_id=?'
+                                    var meeting_id = rows[id-1].meeting_id;                     
+                                    var select_participant_sql = 'select users.user_nick_name, users.user_img from users inner join meeting_participants on users.user_id = meeting_participants.fk_participant_id where fk_meeting_id=?';
                                     connection.query(select_participant_sql, [meeting_id], (err, rows, fields)=>{
                                         if(err){
                                             console.log(err);
