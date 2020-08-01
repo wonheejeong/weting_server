@@ -18,9 +18,7 @@ module.exports = function(app, connection)
     var upload = Image('user_img/');
 
 
-    app.get('/login/join', function(req, res, next){
-        console.log("hello");
-    });
+    
     //eamil 중복 확인
     app.post('/login/join/check/email',function(req, res, next){
         console.log('post /join/check/email');

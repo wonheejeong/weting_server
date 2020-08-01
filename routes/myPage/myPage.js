@@ -1,7 +1,7 @@
 module.exports = function(app, connection)
 {
     app.get('/mypage',function(req, res, next){
-        console.log('get /mapage');
+        console.log('get /mypage');
         var user_email = req.session.user_email;
         var sql = 'SELECT user_nick_name, user_img,user_introduce, user_interests, user_birth, user_email FROM users WHERE user_email =?;';
         connection.query(sql,user_email, function (error, result,fields){
