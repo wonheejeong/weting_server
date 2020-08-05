@@ -1,14 +1,12 @@
 module.exports = function(app, connection){
 
-    //delete 창
-    app.get('/myWeetingDelete/:id', (req, res)=>{
-        //id = myweeting list No.
-        var id=req.params.id;
+    //모임 삭제창
+    app.get('/myWeetingDelete/:meeting_id', (req, res)=>{
+        var meeting_id = req.params.meeting_id;
         if(req.session.logined){
-            //로그인 상태
             var user_email = req.session.user_email;
-            var select_sql = 'SELECT user_id FROM users WHERE user_email = ?';
-            connection.query(select_sql, [user_email], (err, rows, fields)=>{
+            var select_user_sql = 'select user_id from users where user_email=?';
+            connection.query(select_user_sql, [user_email], (err, rows, fields)=>{
                 if(err){
                     console.log(err);
                     res.json({
@@ -17,10 +15,10 @@ module.exports = function(app, connection){
                     });
                 }
                 else{
-                    //user_id 조회
                     var user_id = rows[0].user_id;
-                    var select_meeting_sql = 'SELECT * FROM meeting WHERE fk_captain_id=?';
-                    connection.query(select_meeting_sql, [user_id], (err, rows, fields)=>{
+                    //모임장 확인
+                    var select_captain_sql = 'select fk_meeting_interest, meeting_name, meeting_description, meeting_location, meeting_time, meeting_recruitment, age_limit_min, age_limit_max, meeting_img from meeting where fk_captain_id=? and meeting_id=?';
+                    connection.query(select_captain_sql, [user_id, meeting_id], (err, rows, fields)=>{
                         if(err){
                             console.log(err);
                             res.json({
@@ -29,20 +27,33 @@ module.exports = function(app, connection){
                             });
                         }
                         else{
-                            if(rows.length == 0 || id > rows.length || id==0){
+                            if(rows.length == 0){
                                 res.json({
-                                    'state':404,
-                                    'message':'삭제할 모임 없음'
+                                    'state':401,
+                                    'message':'권한 없음'
                                 });
                             }
                             else{
-                                res.json({
-                                    'state':200,
-                                    'message':'조회 성공',
-                                    'data': rows[id-1]
-                                });
+                                var select_interest_sql = 'select interests_name from meeting_interests where interests_id=?';
+                                connection.query(select_interest_sql, [rows[0].fk_meeting_interest], (err, result, fields)=>{
+                                    if(err){
+                                        console.log(err);
+                                        res.json({
+                                            'state':500,
+                                            'message':'서버 에러'
+                                        });
+                                    }
+                                    else{
+                                        res.json({
+                                            'state':200,
+                                            'message':'조회 성공',
+                                            'meeting_interest':result[0].interests_name,
+                                            'data':rows
+                                        });
+                                    }
+                                })
                             }
-                            }
+                        }
                     });
                 }
             });

@@ -50,6 +50,9 @@ var recommendRouter = require('./routes/recommend/recommend.js')(app,connection)
 //create meeting
 var NewWeetingRouter = require('./routes/createMeeting/create.js')(app, connection);
 
+//main
+
+var mainRouter = require('./routes/main/main.js')(app, connection);
 //myWeeting
 var myWeetingRouter = require('./routes/MyWeeting/myWeeting.js')(app, connection);
 

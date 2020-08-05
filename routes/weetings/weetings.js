@@ -3,11 +3,12 @@ module.exports = function(app, connection){
 
     app.get(['/weetings', '/weetings/:id'], (req, res)=>{
         if(req.session.logined){
+            // id = 모임ID
             var id = req.params.id;
             //모임 상세 정보
             if(id){
-                var select_sql = 'select * from meeting order by meeting_name asc';
-                connection.query(select_sql, (err, rows, fields)=>{
+                var select_sql = 'select meeting.*, users.user_nick_name from meeting join users on meeting.fk_captain_id = users.user_id where meeting_id=? order by meeting_name asc';
+                connection.query(select_sql, [id], (err, rows, fields)=>{
                     if(err){
                         console.log(err);
                         res.json({
@@ -16,7 +17,7 @@ module.exports = function(app, connection){
                         });
                     }
                     else{
-                        if(id > rows.length || rows.length == 0 || id == 0){
+                        if(rows.length == 0){
                             res.json({
                                 'state':404,
                                 'message':'모임 없음'
@@ -26,7 +27,7 @@ module.exports = function(app, connection){
                             res.json({
                                 'state':200,
                                 'message':'조회 성공',
-                                'data':rows[id-1]
+                                'data':rows
                             });
                         }
                     }
@@ -34,7 +35,7 @@ module.exports = function(app, connection){
             }
             else{
                 //전체 결과 리스트
-                var select_sql = 'select meeting_name, meeting_img from meeting order by meeting_name asc';
+                var select_sql = 'select meeting_name, meeting_img, meeting_location, meeting_time, meeting_recruitment from meeting order by meeting_name asc';
                 connection.query(select_sql, (err, rows, fields)=>{
                     if(err){
                         console.log(err);

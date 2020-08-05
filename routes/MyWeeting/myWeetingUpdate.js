@@ -2,14 +2,12 @@ module.exports = function(app, connection){
     var Image = require('../Image/S3.js');
     var upload = Image();
 
-    app.get('/MyweetingUpdate/:id', (req, res)=>{
-        //id = 나의 모임 개수 기준 번호
-        var id= req.params.id; 
+    app.get('/myWeetingUpdate/:meeting_id', (req, res)=>{
+        var meeting_id = req.params.meeting_id;
         if(req.session.logined){
-            //로그인 상태
             var user_email = req.session.user_email;
-            var select_sql = 'SELECT user_id FROM users WHERE user_email=?';
-            connection.query(select_sql, [user_email], (err, rows, fields)=>{
+            var select_user_sql = 'select user_id from users where user_email=?';
+            connection.query(select_user_sql, [user_email], (err, rows, fields)=>{
                 if(err){
                     console.log(err);
                     res.json({
@@ -19,8 +17,9 @@ module.exports = function(app, connection){
                 }
                 else{
                     var user_id = rows[0].user_id;
-                    var select_meeting_sql = 'SELECT * FROM meeting WHERE fk_captain_id=?';
-                    connection.query(select_meeting_sql, [user_id], (err, rows, fields)=>{
+                    //모임장 확인
+                    var select_captain_sql = 'select fk_meeting_interest, meeting_name, meeting_description, meeting_location, meeting_time, meeting_recruitment, age_limit_min, age_limit_max, meeting_img from meeting where fk_captain_id=? and meeting_id=?';
+                    connection.query(select_captain_sql, [user_id, meeting_id], (err, rows, fields)=>{
                         if(err){
                             console.log(err);
                             res.json({
@@ -29,17 +28,37 @@ module.exports = function(app, connection){
                             });
                         }
                         else{
-                            if(rows.length== 0 || id > rows.length || id==0){
+                            if(rows.length == 0){
                                 res.json({
-                                    'state':404,
-                                    'message':'모임 없음'
+                                    'state':401,
+                                    'message':'권한 없음'
                                 });
                             }
                             else{
-                                res.json({
-                                    'state':200,
-                                    'message':'모임 조회 성공',
-                                    'data':rows[id-1]
+                                //카테고리 전송
+                                var select_interest_sql = 'select * from meeting_interests';
+                                connection.query(select_interest_sql, (err, result, fields)=>{
+                                    if(err){
+                                        console.log(err);
+                                        res.json({
+                                            'state':500,
+                                            'message':'서버 에러'
+                                        });
+                                    }
+                                    else{                           
+                                        for(var i=0; i < result.length; i++){
+                                            if(result[i].interests_id == rows[0].fk_meeting_interest){
+                                                var meeting_interest = result[i].interests_name;
+                                            }
+                                        }
+                                        res.json({
+                                            'state':200,
+                                            'message':'조회 성공',
+                                            'category':result,
+                                            'meeting_interest':meeting_interest,
+                                            'data':rows
+                                        })                                        
+                                    }
                                 });
                             }
                         }
@@ -47,7 +66,6 @@ module.exports = function(app, connection){
                 }
             });
         }
-        //로그인 X
         else{
             res.json({
                 'state':300,
@@ -70,15 +88,15 @@ module.exports = function(app, connection){
                     });
                 }
                 else{
-                    var meeting_img = (results[0].length == 0) ? null : results[0].meeting_img;
+                    var meeting_img = (results.length == 0) ? null : results[0].meeting_img;
                 }
             })
         }
         else{
             var meeting_img = req.file.location;
             }
-        var update_sql = 'UPDATE meeting SET fk_meeting_interest=?, meeting_name=?, meeting_description=?, meeting_location=?, meeting_recruitment=?, meeting_time=?, age_limit_min=?, age_limit_max=?, meeting_img=? WHERE meeting_id=?';
-        connection.query(update_sql, [body.fk_meeting_interest, body.meeting_name, body.meeting_description, body.meeting_location, body.meeting_recruitment, body.meeting_time, body.age_limit_min, body.age_limit_max, meeting_img, body.meeting_id], (err, rows, fields)=>{
+        var select_interest_sql = 'select interests_id from meeting_interests where interests_name = ?';
+        connection.query(select_interest_sql, [body.meeting_interest], (err, rows, fields)=>{
             if(err){
                 console.log(err);
                 res.json({
@@ -87,11 +105,24 @@ module.exports = function(app, connection){
                 });
             }
             else{
-                res.json({
-                    'state':200,
-                    'message':'수정 성공'
+                var meeting_interest = rows[0].interests_id;
+                var update_sql = 'UPDATE meeting SET fk_meeting_interest=?, meeting_name=?, meeting_description=?, meeting_location=?, meeting_recruitment=?, meeting_time=?, age_limit_min=?, age_limit_max=?, meeting_img=? WHERE meeting_id=?';
+                connection.query(update_sql, [meeting_interest, body.meeting_name, body.meeting_description, body.meeting_location, body.meeting_recruitment, body.meeting_time, body.age_limit_min, body.age_limit_max, meeting_img, body.meeting_id], (err, rows, fields)=>{
+                    if(err){
+                        console.log(err);
+                        res.json({
+                            'state':500,
+                            'message':'서버 에러'
+                        });
+                    }
+                    else{
+                        res.json({
+                            'state':200,
+                            'message':'수정 성공'
+                        });
+                    }
                 });
             }
-        })
+        });
     });
 }

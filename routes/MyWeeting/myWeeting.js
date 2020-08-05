@@ -1,10 +1,9 @@
 module.exports = function(app, connection){
-
-    //내가 만든 모임 list
+    // 나의 모임 목록
     app.get('/myWeeting', (req, res)=>{
         if(req.session.logined){
             var user_email = req.session.user_email;
-            var select_sql = 'SELECT user_email, user_id FROM users WHERE user_email = ?';
+            var select_sql = 'select user_id from users where user_email=?';
             connection.query(select_sql, [user_email], (err, rows, fields)=>{
                 if(err){
                     console.log(err);
@@ -14,9 +13,9 @@ module.exports = function(app, connection){
                     });
                 }
                 else{
-                    var captain_id = rows[0].user_id;
-                    var meeting_select_sql = 'SELECT * FROM meeting WHERE fk_captain_id = ?';
-                    connection.query(meeting_select_sql, [captain_id], (err, rows, fields)=>{
+                    var user_id = rows[0].user_id;
+                    var select_meeting_sql = 'select meeting_id, meeting_name, meeting_img from meeting join meeting_participants on meeting.meeting_id = meeting_participants.fk_meeting_id where fk_participant_id=?';
+                    connection.query(select_meeting_sql, [user_id], (err, rows, fields)=>{
                         if(err){
                             console.log(err);
                             res.json({
@@ -25,21 +24,21 @@ module.exports = function(app, connection){
                             });
                         }
                         else{
-                            if(rows.length==0){
+                            if(rows.length == 0){
                                 res.json({
                                     'state':404,
-                                    'message':'내가 만든 모임 없음'
+                                    'message':'모임 없음'
                                 });
                             }
                             else{
                                 res.json({
                                     'state':200,
-                                    'message': '조회 성공',
-                                    'data': rows
+                                    'message':'조회 성공',
+                                    'data':rows
                                 });
                             }
                         }
-                    });
+                    })
                 }
             });
         }
