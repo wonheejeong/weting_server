@@ -25,7 +25,7 @@ module.exports = function(app, connection){
                     else{
                         if(id){
                             //해당 카테고리의 모임 상세 정보 조회 - 전체 정보 조회
-                            var select_sql = 'select meeting.*, users.user_nick_name from meeting join users on meeting.fk_captain_id = users.user_id where meeting_id=? order by meeting_name asc';
+                            var select_sql = 'select meeting.*, users.user_nick_name as captain_nick_name from meeting join users on meeting.fk_captain_id = users.user_id where meeting_id=? order by meeting_name asc';
                             connection.query(select_sql, [id], (err, rows, fields)=>{
                                 if(err){
                                     console.log(err);

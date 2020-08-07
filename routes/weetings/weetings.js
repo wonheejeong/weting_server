@@ -7,7 +7,7 @@ module.exports = function(app, connection){
             var id = req.params.id;
             //모임 상세 정보
             if(id){
-                var select_sql = 'select meeting.*, users.user_nick_name from meeting join users on meeting.fk_captain_id = users.user_id where meeting_id=? order by meeting_name asc';
+                var select_sql = 'select meeting.*, users.user_nick_name as captain_nick_name from meeting join users on meeting.fk_captain_id = users.user_id where meeting_id=? order by meeting_name asc';
                 connection.query(select_sql, [id], (err, rows, fields)=>{
                     if(err){
                         console.log(err);
