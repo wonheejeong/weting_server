@@ -5,7 +5,7 @@ module.exports = function(app, connection){
     //모임 생성 페이지
     app.get('/newWeeting', (req, res)=>{
         if(req.session.logined){
-            var select_sql = 'SELECT interests_name FROM meeting_interests';
+            var select_sql = 'SELECT * FROM meeting_interests';
             connection.query(select_sql, (err, rows, fields)=>{
                 if(err){
                     console.log(err);

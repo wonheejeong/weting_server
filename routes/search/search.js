@@ -3,7 +3,7 @@ module.exports = function(app, connection){
     
     app.get('/searchview', (req, res)=>{
         if(req.session.logined){
-            var sql = 'select meeting_interests.interests_name as interest_name from meeting_interests, meeting where meeting_interests.interests_id = meeting.fk_meeting_interest group by interests_id having count(meeting_interests.interests_id) order by count(meeting_interests.interests_id) desc;'
+            var sql = 'select meeting_interests.interests_id, meeting_interests.interests_name as interest_name from meeting_interests, meeting where meeting_interests.interests_id = meeting.fk_meeting_interest group by interests_id having count(meeting_interests.interests_id) order by count(meeting_interests.interests_id) desc;'
             connection.query(sql, (err, rows, fields)=>{
                 if(err){
                     console.log(err);

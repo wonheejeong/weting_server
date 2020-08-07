@@ -56,15 +56,10 @@ var mainRouter = require('./routes/main/main.js')(app, connection);
 //myWeeting
 var myWeetingRouter = require('./routes/MyWeeting/myWeeting.js')(app, connection);
 
-var myWeetingDetailRouter = require('./routes/MyWeeting/myWeetingDetail.js')(app, connection);
-
 var myWeetingDeleteRouter = require('./routes/MyWeeting/myWeetingDelete.js')(app, connection);
 
 var myWeetingUpdateRouter = require('./routes/MyWeeting/myWeetingUpdate.js')(app, connection);
 
-var myWeetingMembersRouter = require('./routes/MyWeeting/myWeetingMembers.js')(app, connection);
-
-var myWeetingMemberDetailRouter = require('./routes/MyWeeting/memberDetail.js')(app, connection);
 
 //search 
 var searchRouter = require('./routes/search/search.js')(app, connection);
@@ -76,4 +71,4 @@ var searchResultRouter = require('./routes/search/searchResult.js')(app, connect
 //weetings
 var weetingsRouter = require('./routes/weetings/weetings.js')(app, connection);
 
-var weetingCategoryRouter = require('./routes/weetings/weetingCategory.js')(app, connection);
+var weetingDetailRouter = require('./routes/weetings/weetingDetail.js')(app, connection);

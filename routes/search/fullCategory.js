@@ -3,7 +3,7 @@ module.exports = function(app, connection){
     
     app.get('/fullCategory', (req, res)=>{
         if(req.session.logined){
-            var select_sql = 'select interests_name from meeting_interests';
+            var select_sql = 'select * from meeting_interests';
             connection.query(select_sql, (err, rows, fields)=>{
                 if(err){
                     console.log(err);
