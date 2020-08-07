@@ -17,7 +17,7 @@ module.exports = function(app, connection){
                 else{
                     var user_id = rows[0].user_id;
                     //모임장 확인
-                    var select_captain_sql = 'select fk_meeting_interest, meeting_name, meeting_description, meeting_location, meeting_time, meeting_recruitment, age_limit_min, age_limit_max, meeting_img from meeting where fk_captain_id=? and meeting_id=?';
+                    var select_captain_sql = 'select * from meeting where fk_captain_id=? and meeting_id=?';
                     connection.query(select_captain_sql, [user_id, meeting_id], (err, rows, fields)=>{
                         if(err){
                             console.log(err);

@@ -64,7 +64,7 @@ module.exports = function(app, connection){
                                 }
                                 else{
                                     var interests_id = rows[0].interests_id;
-                                    var select_meeting_sql = 'select meeting_name, meeting_img, meeting_location, meeting_time, meeting_recruitment from meeting where fk_meeting_interest=? order by meeting_name asc';
+                                    var select_meeting_sql = 'select meeting_id, meeting_name, meeting_img, meeting_location, meeting_time, meeting_recruitment from meeting where fk_meeting_interest=? order by meeting_name asc';
                                     connection.query(select_meeting_sql, [interests_id], (err, rows, fields)=>{
                                         if(err){
                                             console.log(err);

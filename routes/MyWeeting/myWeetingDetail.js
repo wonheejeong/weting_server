@@ -21,8 +21,8 @@ module.exports = function(app, connection){
                         });
                     }
                     else{
-                        var select_meeting_sql = 'select meeting_name, meeting_location, meeting_time, meeting_recruitment, meeting_img from meeting where meeting_id=?';
-                        connection.query(select_meeting_sql, [meeting_id], (err, rows, fields)=>{
+                        var select_meeting_sql = 'select * from meeting where meeting_id=?';
+                        connection.query(select_meeting_sql, [meeting_id], (err, meeting, fields)=>{
                             if(err){
                                 console.log(err);
                                 res.json({
@@ -31,10 +31,24 @@ module.exports = function(app, connection){
                                 });
                             }
                             else{
-                                res.json({
-                                    'state':200,
-                                    'message':'조회 성공',
-                                    'data':rows
+                                var meeting_interest = meeting[0].fk_meeting_interest;
+                                var select_interests_sql = 'select interests_name from meeting_interests where interests_id=?';
+                                connection.query(select_interests_sql, [meeting_interest], (err, rows, fields)=>{
+                                    if(err){
+                                        console.log(err);
+                                        res.json({
+                                            'state':500,
+                                            'message':'서버 에러'
+                                        });
+                                    }
+                                    else{
+                                        res.json({
+                                            'state':200,
+                                            'message':'조회 성공',
+                                            'meeting_interest':rows[0].interests_name,
+                                            'data':meeting
+                                        });
+                                    }
                                 });
                             }
                         })
