@@ -77,24 +77,7 @@ module.exports = function(app, connection){
     //update 전송
     app.post('/myWeetingUpdate', upload.single('meeting_img'), (req, res)=>{
         var body = req.body;
-        if(req.file == undefined){
-            var img_select_sql = 'select meeting_img from meeting where meeting_id=?';
-            connection.query(img_select_sql, [body.meeting_id], (err, results, fields)=>{
-                if(err){
-                    console.log(err);
-                    res.json({
-                        'state':500,
-                        'message':'서버 에러'
-                    });
-                }
-                else{
-                    var meeting_img = (results[0].meeting_img == null) ? null : results[0].meeting_img;
-                }
-            })
-        }
-        else{
-            var meeting_img = req.file.location;
-            }
+        var meeting_img = (req.file == undefined) ? body.meeting_img : req.file.location;
         var select_interest_sql = 'select interests_id from meeting_interests where interests_name = ?';
         connection.query(select_interest_sql, [body.meeting_interest], (err, rows, fields)=>{
             if(err){
