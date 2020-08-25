@@ -88,7 +88,7 @@ module.exports = function(app, connection){
                     });
                 }
                 else{
-                    var meeting_img = (results.length == 0) ? null : results[0].meeting_img;
+                    var meeting_img = (results[0].meeting_img == null) ? null : results[0].meeting_img;
                 }
             })
         }
