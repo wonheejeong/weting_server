@@ -5,22 +5,9 @@ module.exports = function(app, connection){
     //모임 생성 페이지
     app.get('/newWeeting', (req, res)=>{
         if(req.session.logined){
-            var select_sql = 'SELECT * FROM meeting_interests';
-            connection.query(select_sql, (err, rows, fields)=>{
-                if(err){
-                    console.log(err);
-                    res.json({
-                        'state':500,
-                        'message': '모임 생성 페이지 접속 오류'
-                    })
-                }
-                else{
-                    res.json({
-                        'state':200,
-                        'message':'접속 성공',
-                        'data':rows
-                        });
-                    }
+            res.json({
+                'state':200,
+                'message':'접속 성공'
             });
         }
         else{

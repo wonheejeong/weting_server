@@ -72,3 +72,5 @@ var searchResultRouter = require('./routes/search/searchResult.js')(app, connect
 var weetingsRouter = require('./routes/weetings/weetings.js')(app, connection);
 
 var weetingDetailRouter = require('./routes/weetings/weetingDetail.js')(app, connection);
+
+var weetingParticipateRouter = require('./routes/participate/participate.js')(app, connection);

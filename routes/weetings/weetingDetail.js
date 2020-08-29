@@ -15,7 +15,7 @@ module.exports = function(app, connection){
                 }
                 else{
                     var user_id = rows[0].user_id;
-                    var select_meeting_sql = 'select meeting.fk_meeting_interest, meeting.meeting_name, meeting.meeting_description, meeting.meeting_location, meeting.meeting_time, meeting.meeting_recruitment, meeting.age_limit_min, meeting.age_limit_max, meeting.meeting_img, users.user_nick_name as captain_nick_name from meeting join users on meeting.fk_captain_id = users.user_id where meeting_id=?';
+                    var select_meeting_sql = 'select meeting.fk_meeting_interest, meeting.meeting_name, meeting.meeting_description, meeting.meeting_location, meeting.meeting_time, meeting.meeting_recruitment, meeting.age_limit_min, meeting.age_limit_max, meeting.meeting_img, (select count(fk_participant_id) from meeting_participants where fk_meeting_id=meeting_id) as present_members, users.user_nick_name as captain_nick_name from meeting join users on meeting.fk_captain_id = users.user_id where meeting_id=?';
                     connection.query(select_meeting_sql, [meeting_id], (err, meeting, fields)=>{
                         if(err){
                             console.log(err);
@@ -69,6 +69,7 @@ module.exports = function(app, connection){
                                                                 'state':200,
                                                                 'message':'조회 성공',
                                                                 'is_member':rows[0].success,
+                                                                'meeting_id' : meeting_id,
                                                                 'meeting_interest':meeting_interest,
                                                                 'data':meeting,
                                                                 'meeting_members':members
@@ -82,6 +83,7 @@ module.exports = function(app, connection){
                                                         'state':200,
                                                         'message':'조회 성공',
                                                         'is_member':rows[0].success,
+                                                        'meeting_id' : meeting_id,
                                                         'meeting_interest':meeting_interest,
                                                         'data':meeting
                                                     });

@@ -5,7 +5,7 @@ module.exports = function(app, connection){
         // location = 유저 위치
         var search = req.body.search;
         var user_location = req.body.user_location;
-        var sql = "select meeting_id, meeting_name, meeting_location, meeting_time, meeting_recruitment, meeting_img from meeting where meeting_name like '%" + search + "%' and meeting_location like '%" + user_location + "%'";
+        var sql = "select meeting_id, meeting_name, meeting_location, meeting_time, (select count(fk_participant_id) from meeting_participants where fk_meeting_id=meeting_id) as present_members, meeting_img from meeting where meeting_name like '%" + search + "%' and meeting_location like '%" + user_location + "%'";
         connection.query(sql, [user_location], (err, rows, fields)=>{
             if(err){
                 console.log(err);
@@ -37,7 +37,7 @@ module.exports = function(app, connection){
     //전체 검색 결과
     app.post('/search', (req, res)=>{
         var search = req.body.search;
-        var select_sql = "select meeting_id, meeting_name, meeting_location, meeting_time, meeting_recruitment, meeting_img from meeting where meeting_name like '%" + search + "%'";
+        var select_sql = "select meeting_id, meeting_name, meeting_location, meeting_time, (select count(fk_participant_id) from meeting_participants where fk_meeting_id=meeting_id) as present_members, meeting_img from meeting where meeting_name like '%" + search + "%'";
         connection.query(select_sql, [search], (err, rows, fields)=>{
             if(err){
                 console.log(err);

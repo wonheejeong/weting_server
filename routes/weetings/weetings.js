@@ -22,7 +22,7 @@ module.exports = function(app, connection){
                         }
                         else{
                             var interest_id = rows[0].interests_id;
-                            var select_meeting_sql = 'select meeting_id, meeting_name, meeting_img, meeting_location, meeting_time, meeting_recruitment from meeting where fk_meeting_interest =? order by meeting_name asc';
+                            var select_meeting_sql = 'select meeting_id, meeting_name, meeting_img, meeting_location, meeting_time, (select count(fk_participant_id) from meeting_participants where fk_meeting_id=meeting_id) as present_members from meeting where fk_meeting_interest =? order by meeting_name asc';
                             connection.query(select_meeting_sql, [interest_id], (err, rows, fields)=>{
                                 if(err){
                                     console.log(err);
@@ -52,7 +52,7 @@ module.exports = function(app, connection){
                 });
             }
             else{
-                var select_sql = 'select meeting_id, meeting_name, meeting_img, meeting_location, meeting_time, meeting_recruitment from meeting order by meeting_name asc';
+                var select_sql = 'select meeting_id, meeting_name, meeting_img, meeting_location, meeting_time, (select count(fk_participant_id) from meeting_participants where fk_meeting_id=meeting_id) as present_members from meeting order by meeting_name asc';
                 connection.query(select_sql, (err, rows, fields)=>{
                     if(err){
                         console.log(err);
