@@ -6,6 +6,17 @@ var session = require('express-session');
 const FileStore = require('session-file-store')(session);
 var app = express();
 const path = require('path');
+var execPHP = require('./phpfiles/execphp.js')();
+
+execPHP.phpFolder = './phpfiles';
+
+app.use('*.php', function(req, res, next){
+  execPHP.parseFile(req.originalUrl, function(phpResult){
+    res.write(phpResult);
+    res.end();
+  });
+});
+
 app.use('/swagger-ui', express.static(path.join(__dirname, './node_modules/swagger-ui/dist')));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(bodyParser.json({limit: '50mb'}));
