@@ -12,6 +12,7 @@ function randomString() {
 
 module.exports = function(app, connection)
 {   
+    const crypto = require('crypto');
     const nodemailer = require('nodemailer');
     var mailconfig = require('../../config/mailconfig.json');
     var Image = require('../Image/S3.js');
@@ -92,14 +93,20 @@ module.exports = function(app, connection)
         var user_email = req.body.user_email;
         var user_name = req.body.user_name;
         var user_nick_name = req.body.user_nick_name;
+        var user_interests = req.body.user_interests;
         var user_img = (req.file == undefined) ? null : req.file.location; 
+        let salt = Math.round((new Date().valueOf() * Math.random())) + "";
+        let hashPassword = crypto.createHash("sha512").update(user_passwd + salt).digest("hex");
+
         var sql = 'INSERT INTO users SET ?;';
         var params = {
-            "user_passwd" : user_passwd,
+            "user_passwd" : hashPassword,
+            "user_salt" : salt,
             "user_birth" : user_birth,
             "user_email" : user_email,
             "user_name" : user_name,
             "user_nick_name" : user_nick_name,
+            "user_interests" : user_interests,
             "user_img" : user_img
 
         };
@@ -137,8 +144,8 @@ module.exports = function(app, connection)
         let mailOptions = {
           from: mailconfig.email,    
           to: user_email ,                     
-          subject: '위팅: 회원가입 인증번호 안내',   
-          html: '<p>안녕하세요.<br>여성들의 안전한 취미 공유 서비스 "위팅"입니다.<br>아래의 인증번호를 입력해 회원가입을 완료해주세요 !</p><br><br>' +
+          subject: '위팅: 이메일 인증번호 안내',   
+          html: '<p>안녕하세요.<br>여성들의 안전한 취미 공유 서비스 "위팅"입니다.<br>아래의 인증번호를 입력해 이메일 인증을 완료해주세요 !</p><br><br>' +
           "<b>인증번호: "+token+"</b>"
         };
       
