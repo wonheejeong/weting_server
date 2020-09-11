@@ -3,13 +3,24 @@ var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var config = require('./db_info.js').local;
 var session = require('express-session');
-const FileStore = require('session-file-store')(session);
-var app = express();
 const path = require('path');
+const FileStore = require('session-file-store')(session);
+
+//socket.io 필요 모듈 
+var socket = require('socket.io');
+var http = require('http');
+
+var app = express();
+app.set('views', './views');
+app.set('view engine', 'pug');
+app.use(express.static(path.join(__dirname, 'public')));
+
+var server = http.createServer(app);
+var io = socket(server);
+
+//php 
 var execPHP = require('./phpfiles/execphp.js')();
-
 execPHP.phpFolder = './phpfiles';
-
 app.use('*.php', function(req, res, next){
   execPHP.parseFile(req.originalUrl, function(phpResult){
     res.write(phpResult);
@@ -36,9 +47,8 @@ var connection = mysql.createConnection({
                 });
 
 connection.connect();
-
 var port = process.env.PORT || 3000;
-app.listen(port ,function(){
+server.listen(port ,function(){
     console.log("Express server has started on port " + port);
 });
 // routes
@@ -85,3 +95,5 @@ var weetingsRouter = require('./routes/weetings/weetings.js')(app, connection);
 var weetingDetailRouter = require('./routes/weetings/weetingDetail.js')(app, connection);
 
 var weetingParticipateRouter = require('./routes/participate/participate.js')(app, connection);
+
+var chatRouter = require('./routes/chat/chat.js')(io, app, connection);
