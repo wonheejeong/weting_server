@@ -1,6 +1,6 @@
 module.exports = function(io, app, connection){
-    app.get('/chat/:meeting_id', (req, res)=> {
-        var meeting_id = req.params.meeting_id;
+    app.get('/chat/:roomId', (req, res)=> {
+        var roomId = req.params.roomId;
         if(req.session.logined){
             var user_email = req.session.user_email;
             var select_sql = 'select user_id, user_nick_name from users where user_email=?';
@@ -15,7 +15,7 @@ module.exports = function(io, app, connection){
                     var user_id = rows[0].user_id;
                     var name = rows[0].user_nick_name;
                     var is_member_sql = 'select EXISTS (select * from meeting_participants where fk_participant_id = ? and fk_meeting_id=?) as success';
-                    connection.query(is_member_sql, [user_id, meeting_id], (err, rows, fields)=>{
+                    connection.query(is_member_sql, [user_id, roomId], (err, rows, fields)=>{
                         if(err){
                             console.log(err);
                             res.json({
@@ -24,29 +24,29 @@ module.exports = function(io, app, connection){
                             });
                         }
                         else{
-                            if(rows[0]){
-                                var namespace_chat = io.of('/chat');
-                                var room = meeting_id;
-
+                            if(rows[0].success){
                                 //function 매개변수 socket = 클라이언트와 연결되어 있는 socket 관련 정보들
-                                namespace_chat.once('connection', function(socket){
-                                    console.log('user connected: ', name);  
+                                io.once('connection', (socket) => {
                                     socket.name = name;
-                                    io.to(socket.id).emit('create name', name);   
+                                    socket.join(roomId);
+                                    console.log('user ' + name + ' joined.');
                                     io.emit('new_connect', name);
+                                    io.to(socket.id).emit('create name', name);
 
-                                    socket.on('disconnect', function(){ 
-                                        console.log('user disconnected: '+ socket.id + ' ' + socket.name);
+                                    socket.on('disconnect', () => {
+                                        console.log('user ' + socket.name +  ' leaved');
                                         io.emit('new_disconnect', socket.name);
+                                        socket.leave(roomId);
                                     });
-                                
-                                    socket.on('send message', function(name, text){ 
+                                  
+                                    socket.on('send message', (roomId, name, text) => {
                                         var msg = name + ' : ' + text;
-                                        socket.name = name;
                                         console.log(msg);
-                                        io.emit('receive message', msg);
-                                    });
-                                });  
+                                        //socket.name = name;
+                                        io.to(roomId).emit('receive message', msg);
+                                    }); 
+                                });
+                                res.render('chat', {roomId : roomId}); 
                             }
                             else{
                                 res.json({
@@ -56,7 +56,6 @@ module.exports = function(io, app, connection){
                             }
                         }
                     });
-                    res.render('chat'); 
                 }
             });
         }
