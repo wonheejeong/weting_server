@@ -97,3 +97,5 @@ var weetingDetailRouter = require('./routes/weetings/weetingDetail.js')(app, con
 var weetingParticipateRouter = require('./routes/participate/participate.js')(app, connection);
 
 var chatRouter = require('./routes/chat/chat.js')(io, app, connection);
+
+var chatListRouter = require('./routes/chat/chat_list.js')(app, connection);

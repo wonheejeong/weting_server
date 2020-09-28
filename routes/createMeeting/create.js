@@ -22,7 +22,7 @@ module.exports = function(app, connection){
     app.post('/create', upload.single('meeting_img'), (req, res)=>{
 
         var user_email = req.session.user_email;
-        var user_select_sql = 'SELECT user_id FROM users WHERE user_email=?';
+        var user_select_sql = 'SELECT user_id, user_nick_name FROM users WHERE user_email=?';
         connection.query(user_select_sql, [user_email], (err, rows, fields)=>{
             if(err){
                 console.log(err);
@@ -33,6 +33,7 @@ module.exports = function(app, connection){
             }
             else{
                 var user_id = rows[0].user_id;
+                var user_nick_name = rows[0].user_nick_name;
                 var meeting_img = (req.file == undefined) ? null : req.file.location;
                 var body = req.body;
 
@@ -86,9 +87,25 @@ module.exports = function(app, connection){
                                             });
                                         }
                                         else{
-                                            res.json({
-                                                'state':200,
-                                                'meesage': '모임 생성 성공',
+                                            var create_chat_room = 'INSERT INTO chatroom (meeting_id, meeting_name, user_nick_name) VALUES (?, ?, ?)';
+                                            connection.query(create_chat_room, [result.insertId, queries['meeting_name'], user_nick_name], (err, rows, fields)=>{
+                                                if(err){
+                                                    res.json({
+                                                        'state':500,
+                                                        'message':'채팅방 생성 오류'
+                                                    });
+                                                    console.log(err);
+                                                }
+                                                else{
+                                                    res.json({
+                                                        'state':200,
+                                                        'message':'모임 생성 성공',
+                                                        'data': {
+                                                            'meeting_id' : result.insertId,
+                                                            'meetine_name':queries['meeting_name']
+                                                        }
+                                                    });
+                                                }
                                             });
                                         }
                                     });

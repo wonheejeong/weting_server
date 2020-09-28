@@ -3,7 +3,7 @@ module.exports = function(app, connection){
     app.post('/participate', (req, res)=>{
         var meeting_id = req.body.meeting_id;
         var user_email = req.session.user_email;
-        var select_sql = 'select user_id from users where user_email=?';
+        var select_sql = 'select user_id, user_nick_name from users where user_email=?';
         connection.query(select_sql, [user_email], (err, rows, fields)=>{
             if(err){
                 console.log(err);
@@ -14,6 +14,7 @@ module.exports = function(app, connection){
             }
             else{
                 var user_id = rows[0].user_id;
+                var user_nick_name = rows[0].user_nick_name;
                 var is_member_sql = 'select EXISTS (select * from meeting_participants where fk_meeting_id=? and fk_participant_id=?) as success';
                 connection.query(is_member_sql, [meeting_id, user_id], (err, rows, fields)=>{
                     if(err){
@@ -49,7 +50,7 @@ module.exports = function(app, connection){
                             });
                         }
                     }
-                })
+                });
             }
         });
     });
@@ -58,7 +59,7 @@ module.exports = function(app, connection){
     app.post('/withdraw', (req, res)=>{
         var meeting_id = req.body.meeting_id;
         var user_email = req.session.user_email;
-        var select_sql = 'select user_id from users where user_email=?';
+        var select_sql = 'select user_id, user_nick_name from users where user_email=?';
         connection.query(select_sql, [user_email], (err, rows, fields)=>{
             if(err){
                 console.log(err);
@@ -70,6 +71,7 @@ module.exports = function(app, connection){
             else{
                 //모임장일 경우 탈퇴 불가능
                 var user_id = rows[0].user_id;
+                var user_nick_name = rows[0].user_nick_name;
                 var is_captain_sql = 'select fk_captain_id from meeting where meeting_id=?';
                 connection.query(is_captain_sql, [meeting_id], (err, rows, fields)=>{
                     if(err){
@@ -109,10 +111,23 @@ module.exports = function(app, connection){
                                                 });
                                             }
                                             else{
-                                                res.json({
-                                                    'state':200,
-                                                    'message':'탈퇴 성공'
-                                                });
+                                                //채팅방 탈퇴
+                                                var withdraw_chat_sql = 'delete from chatroom where user_nick_name=?';
+                                                connection.query(withdraw_chat_sql, [user_nick_name], (err, rows, fields)=>{
+                                                    if(err){
+                                                        console.log(err)
+                                                        res.json({
+                                                            'state':500,
+                                                            'message':'서버 에러'
+                                                        });
+                                                    }
+                                                    else{
+                                                        res.json({
+                                                            'state':200,
+                                                            'message':'탈퇴 성공'
+                                                        });
+                                                    }
+                                                })
                                             }
                                         });
                                     }
