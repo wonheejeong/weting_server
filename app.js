@@ -74,6 +74,7 @@ var NewWeetingRouter = require('./routes/createMeeting/create.js')(app, connecti
 //main
 
 var mainRouter = require('./routes/main/main.js')(app, connection);
+
 //myWeeting
 var myWeetingRouter = require('./routes/MyWeeting/myWeeting.js')(app, connection);
 
@@ -96,6 +97,9 @@ var weetingDetailRouter = require('./routes/weetings/weetingDetail.js')(app, con
 
 var weetingParticipateRouter = require('./routes/participate/participate.js')(app, connection);
 
+//chats
 var chatRouter = require('./routes/chat/chat.js')(io, app, connection);
+
+var inquiryRouter = require('./routes/chat/inquiry.js')(io, app, connection);
 
 var chatListRouter = require('./routes/chat/chat_list.js')(app, connection);

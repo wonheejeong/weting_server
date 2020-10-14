@@ -87,22 +87,35 @@ module.exports = function(app, connection){
                                             });
                                         }
                                         else{
-                                            var create_chat_room = 'INSERT INTO chatroom (meeting_id, meeting_name, user_nick_name) VALUES (?, ?, ?)';
-                                            connection.query(create_chat_room, [result.insertId, queries['meeting_name'], user_nick_name], (err, rows, fields)=>{
+                                            //채팅방 생성
+                                            var create_chat_room = 'INSERT INTO chatroom (meeting_id, meeting_name, user_nick_name, is_member, room) VALUES (?, ?, ?, ?, ?)';
+                                            connection.query(create_chat_room, [result.insertId, queries['meeting_name'], user_nick_name, 1, result.insertId], (err, rows, fields)=>{
                                                 if(err){
+                                                    console.log(err);
                                                     res.json({
                                                         'state':500,
                                                         'message':'채팅방 생성 오류'
                                                     });
-                                                    console.log(err);
                                                 }
                                                 else{
-                                                    res.json({
-                                                        'state':200,
-                                                        'message':'모임 생성 성공',
-                                                        'data': {
-                                                            'meeting_id' : result.insertId,
-                                                            'meetine_name':queries['meeting_name']
+                                                    var create_inquiry_room = 'INSERT INTO chatroom (meeting_id, meeting_name, user_nick_name, is_member, room) VALUES (?, ?, ?, ?, ?)';
+                                                    connection.query(create_inquiry_room, [result.insertId, queries['meeting_name'], user_nick_name, 1, 0], (err, rows, fields) => {
+                                                        if(err){
+                                                            console.log(err);
+                                                            res.json({
+                                                                'state':500,
+                                                                'message':'서버 에러'
+                                                            });
+                                                        }
+                                                        else{
+                                                            res.json({
+                                                                'state':200,
+                                                                'message':'모임 생성 성공',
+                                                                'data': {
+                                                                    'meeting_id' : result.insertId,
+                                                                    'meetine_name':queries['meeting_name'],
+                                                                }
+                                                            });
                                                         }
                                                     });
                                                 }

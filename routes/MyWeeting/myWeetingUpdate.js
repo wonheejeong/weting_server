@@ -108,4 +108,40 @@ module.exports = function(app, connection){
             }
         });
     });
+
+    app.post('/changeCaptain', (req, res) => {
+        //모임 ID, 권한 넘길 사용자 id, nick_name 필요
+        var meeting_id = req.body.meeting_id;
+        var user_id = req.body.user_id;
+        var user_nick_name = req.body.user_nick_name;
+        var update_sql = 'update meeting set fk_captain_id=? where meeting_id=?';
+        connection.query(update_sql, [user_id, meeting_id], (err, rows, fields) => {
+            if(err){
+                console.log(err);
+                res.json({
+                    'state':500,
+                    'message':'서버 에러'
+                });
+            }
+            else{
+                //문의방 모임장 변경
+                var update_inquiry_room = 'update chatroom set user_nick_name=? where meeting_id=? and is_member=1 and room=0';
+                connection.query(update_inquiry_room, [user_nick_name, meeting_id], (err, rows, fields) => {
+                    if(err){
+                        console.log(err);
+                        res.json({
+                            'state':500,
+                            'message':'서버 에러'
+                        });
+                    }
+                    else{
+                        res.json({
+                            'state':200,
+                            'message':'모임장 변경 성공'
+                        });
+                    }
+                });
+            }
+        });
+    });
 }

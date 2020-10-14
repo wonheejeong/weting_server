@@ -55,7 +55,8 @@ module.exports = function(app, connection){
                                             }
                                             else{
                                                 if(rows[0].success){
-                                                    var member_sql = 'select users.user_nick_name, users.user_img, user_introduce from users join meeting_participants on users.user_id = meeting_participants.fk_participant_id where fk_meeting_id=?';
+                                                    //모임원일 경우 모임원도 조회
+                                                    var member_sql = 'select users.user_id, users.user_nick_name, users.user_img, user_introduce from users join meeting_participants on users.user_id = meeting_participants.fk_participant_id where fk_meeting_id=?';
                                                     connection.query(member_sql, [meeting_id], (err, members, fields)=>{
                                                         if(err){
                                                             console.log(err);

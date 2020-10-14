@@ -3,7 +3,7 @@ module.exports = function(app, connection){
     app.post('/participate', (req, res)=>{
         var meeting_id = req.body.meeting_id;
         var user_email = req.session.user_email;
-        var select_sql = 'select user_id, user_nick_name from users where user_email=?';
+        var select_sql = 'select user_id from users where user_email=?';
         connection.query(select_sql, [user_email], (err, rows, fields)=>{
             if(err){
                 console.log(err);
@@ -14,7 +14,6 @@ module.exports = function(app, connection){
             }
             else{
                 var user_id = rows[0].user_id;
-                var user_nick_name = rows[0].user_nick_name;
                 var is_member_sql = 'select EXISTS (select * from meeting_participants where fk_meeting_id=? and fk_participant_id=?) as success';
                 connection.query(is_member_sql, [meeting_id, user_id], (err, rows, fields)=>{
                     if(err){
@@ -111,9 +110,9 @@ module.exports = function(app, connection){
                                                 });
                                             }
                                             else{
-                                                //채팅방 탈퇴
-                                                var withdraw_chat_sql = 'delete from chatroom where user_nick_name=?';
-                                                connection.query(withdraw_chat_sql, [user_nick_name], (err, rows, fields)=>{
+                                                //모임원 목록에서 삭제 후 채팅방 탈퇴
+                                                var withdraw_chat_sql = 'delete from chatroom where user_nick_name=? and meeting_id=? and is_member=1';
+                                                connection.query(withdraw_chat_sql, [user_nick_name, meeting_id], (err, rows, fields)=>{
                                                     if(err){
                                                         console.log(err)
                                                         res.json({
@@ -122,12 +121,25 @@ module.exports = function(app, connection){
                                                         });
                                                     }
                                                     else{
-                                                        res.json({
-                                                            'state':200,
-                                                            'message':'탈퇴 성공'
+                                                        //채팅 기록 삭제
+                                                        var delete_chat_sql = 'delete from chat where user_nick_name=? and meeting_id=? and room=?';
+                                                        connection.query(delete_chat_sql, [user_nick_name, meeting_id, meeting_id], (err, rows, fields) => {
+                                                            if(err){
+                                                                console.log(err);
+                                                                res.json({
+                                                                    'state':500,
+                                                                    'message':'서버 에러'
+                                                                });
+                                                            }
+                                                            else{
+                                                                res.json({
+                                                                    'state':200,
+                                                                    'message':'탈퇴 성공'
+                                                                });
+                                                            }
                                                         });
                                                     }
-                                                })
+                                                });
                                             }
                                         });
                                     }
@@ -144,5 +156,5 @@ module.exports = function(app, connection){
                 });
             }
         });
-    })
+    });
 }

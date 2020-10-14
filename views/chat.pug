@@ -10,16 +10,19 @@ html
         button.btn.btn-info(type='button') 채팅방
       div
         textarea#chatLog.form-control(readonly='')
+      
       form#chat
+        input#room_num.form-contorl(type='text')
         input#name.form-contorl(type='hidden')
         input#message.form-contorl(type='text')
-        button.btn.btn-primary(type='submit') 전송
+        button.btn.btn-primary(type='submit') 전송  
+        
       #box.box
     script.
-      var roomId = #{roomId};
+      var meeting_id = #{meeting_id};
       var socket = io();
       $('#chat').on('submit', function(e){ 
-      socket.emit('send message', roomId, $('#name').val(), $('#message').val());
+      socket.emit('send message', meeting_id, $('#name').val(), $('#message').val());
       $('#message').val('');
       $('#message').focus();
       e.preventDefault();
@@ -28,13 +31,8 @@ html
       $('#chatLog').append(msg + '\n');
       $('#chatLog').scrollTop($('#chatLog')[0].scrollHeight);
       });
-      socket.on('new user', function(chats, user_nick_name){
+      socket.on('new user', function(chats, user_nick_name, room_num){
         $('#chatLog').append(chats);
         $('#name').val(user_nick_name);
+        $('#room_num').val(room_num);
       });
-      //- socket.on('new_disconnect', function(name){
-      //-   $('#chatLog').append('<알림> ' + name + ' 님이 채팅창을 떠났습니다.\n');
-      //- });
-      //- socket.on('new_connect', function(name){
-      //-   $('#chatLog').append('<알림> ' + name + ' 님이 채팅창에 접속했습니다.\n');
-      //- });
