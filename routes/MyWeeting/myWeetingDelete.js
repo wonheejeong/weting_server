@@ -83,23 +83,6 @@ module.exports = function(app, connection){
                     'state':200,
                     'message':'삭제 성공'
                 });
-                //해당 모임 채팅방 모두 삭제
-                // var delete_chatroom_sql = 'delete from chatroom where meeting_id=?';
-                // connection.query(delete_chatroom_sql, [meeting_id], (err, rows, fields) => {
-                //     if(err){
-                //         console.log(err);
-                //         res.json({
-                //             'state':500,
-                //             'message':'서버 에러'
-                //         });
-                //     }
-                //     else{
-                //         res.json({
-                //             'state':200,
-                //             'message':'삭제 성공'
-                //         });
-                //     }
-                // });
             }
         });
     });

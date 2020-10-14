@@ -55,7 +55,7 @@ module.exports = function(io, app, connection){
                                                     }
                                                     else{
                                                         if(exists[0].success){
-                                                            var chat_sql = "select chat.user_nick_name, chat.message, date_format(chat.created, '%Y-%m-%d') from chat left join chatroom on chat.room= chatroom.room where chat.created > chatroom.created and chatroom.meeting_id=? and chatroom.room=? and chatroom.user_nick_name=?";
+                                                            var chat_sql = "select chat.user_nick_name, chat.message, date_format(chat.created, '%Y-%m-%d') as created from chat left join chatroom on chat.room= chatroom.room where chat.created > chatroom.created and chatroom.meeting_id=? and chatroom.room=? and chatroom.user_nick_name=?";
                                                             connection.query(chat_sql, [meeting_id, meeting_id, user_nick_name], (err, rows, fields)=>{
                                                                 if(err){
                                                                     console.log(err);

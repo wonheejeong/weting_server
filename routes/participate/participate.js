@@ -121,23 +121,10 @@ module.exports = function(app, connection){
                                                         });
                                                     }
                                                     else{
-                                                        //채팅 기록 삭제
-                                                        var delete_chat_sql = 'delete from chat where user_nick_name=? and meeting_id=? and room=?';
-                                                        connection.query(delete_chat_sql, [user_nick_name, meeting_id, meeting_id], (err, rows, fields) => {
-                                                            if(err){
-                                                                console.log(err);
-                                                                res.json({
-                                                                    'state':500,
-                                                                    'message':'서버 에러'
-                                                                });
-                                                            }
-                                                            else{
-                                                                res.json({
-                                                                    'state':200,
-                                                                    'message':'탈퇴 성공'
-                                                                });
-                                                            }
-                                                        });
+                                                        res.json({
+                                                            'state':200,
+                                                            'message':'탈퇴 성공'
+                                                        });  
                                                     }
                                                 });
                                             }
