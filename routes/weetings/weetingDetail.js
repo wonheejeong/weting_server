@@ -55,7 +55,7 @@ module.exports = function(app, connection){
                                             }
                                             else{
                                                 if(rows[0].success){
-                                                    //모임원일 경우 모임원도 조회
+                                                    //모임원일 경우 모임원 조회
                                                     var member_sql = 'select users.user_id, users.user_nick_name, users.user_img, user_introduce from users join meeting_participants on users.user_id = meeting_participants.fk_participant_id where fk_meeting_id=?';
                                                     connection.query(member_sql, [meeting_id], (err, members, fields)=>{
                                                         if(err){
@@ -66,20 +66,34 @@ module.exports = function(app, connection){
                                                             });
                                                         }
                                                         else{
-                                                            res.json({
-                                                                'state':200,
-                                                                'message':'조회 성공',
-                                                                'is_member':rows[0].success,
-                                                                'meeting_id' : meeting_id,
-                                                                'meeting_interest':meeting_interest,
-                                                                'data':meeting,
-                                                                'meeting_members':members
+                                                            var is_captain_sql = 'select fk_captain_id from meeting where meeting_id=?';
+                                                            connection.query(is_captain_sql, [meeting_id], (err, rows, fields) => {
+                                                                if(err){
+                                                                    console.log(err);
+                                                                    res.json({
+                                                                        'state':500,
+                                                                        'message':'서버 에러'
+                                                                    });
+                                                                }
+                                                                else{
+                                                                    var is_captain = (user_id == rows[0].fk_captain_id) ? 1 : 0;
+                                                                    res.json({
+                                                                        'state':200,
+                                                                        'message':'조회 성공',
+                                                                        'is_member':rows[0].success,
+                                                                        'is_captain' : is_captain,
+                                                                        'meeting_id' : meeting_id,
+                                                                        'meeting_interest':meeting_interest,
+                                                                        'data':meeting,
+                                                                        'meeting_members':members,
+                                                                    });
+                                                                }
                                                             });
-
                                                         }
                                                     });
                                                 }
                                                 else{
+                                                    //모임원 아닐 경우
                                                     res.json({
                                                         'state':200,
                                                         'message':'조회 성공',
