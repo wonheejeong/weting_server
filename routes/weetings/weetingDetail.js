@@ -45,7 +45,7 @@ module.exports = function(app, connection){
                                     else{
                                         var meeting_interest = interest[0].interests_name;
                                         var is_member_sql = 'select EXISTS (select * from meeting_participants where fk_participant_id = ? and fk_meeting_id=?) as success';
-                                        connection.query(is_member_sql, [user_id, meeting_id], (err, rows, fields)=>{
+                                        connection.query(is_member_sql, [user_id, meeting_id], (err, is_member, fields)=>{
                                             if(err){
                                                 console.log(err);
                                                 res.json({
@@ -54,7 +54,7 @@ module.exports = function(app, connection){
                                                 });
                                             }
                                             else{
-                                                if(rows[0].success){
+                                                if(is_member[0].success){
                                                     //모임원일 경우 모임원 조회
                                                     var member_sql = 'select users.user_id, users.user_nick_name, users.user_img, user_introduce from users join meeting_participants on users.user_id = meeting_participants.fk_participant_id where fk_meeting_id=?';
                                                     connection.query(member_sql, [meeting_id], (err, members, fields)=>{
@@ -80,7 +80,7 @@ module.exports = function(app, connection){
                                                                     res.json({
                                                                         'state':200,
                                                                         'message':'조회 성공',
-                                                                        'is_member':rows[0].success,
+                                                                        'is_member':is_member[0].success,
                                                                         'is_captain' : is_captain,
                                                                         'meeting_id' : meeting_id,
                                                                         'meeting_interest':meeting_interest,
@@ -97,7 +97,7 @@ module.exports = function(app, connection){
                                                     res.json({
                                                         'state':200,
                                                         'message':'조회 성공',
-                                                        'is_member':rows[0].success,
+                                                        'is_member':is_member[0].success,
                                                         'meeting_id' : meeting_id,
                                                         'meeting_interest':meeting_interest,
                                                         'data':meeting
