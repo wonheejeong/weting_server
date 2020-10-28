@@ -185,7 +185,8 @@ module.exports = function(io, app, connection){
                                                 });
                                             }
                                         });
-                                        res.render('chat', {meeting_id : meeting_id});
+                                        console.log('user connected');
+                                        //res.render('chat', {meeting_id : meeting_id});
                                     }
                                 });
                             }
