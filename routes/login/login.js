@@ -1,4 +1,4 @@
-module.exports = function(io, app, connection)
+module.exports = function(app, connection)
 {
     const crypto = require('crypto');
 
@@ -7,29 +7,10 @@ module.exports = function(io, app, connection)
     app.get('/', (req, res) => {      // 1
         console.log('get /');
             if(req.session.logined) {
-                io.once('connection', (socket) => {
-                    socket.on('connect_user', (user) => {
-                        var name = user;
-                        socket.name = name;
-                        console.log('socket ' + socket.name + ' connected');
-                        io.emit('connect_user', user);
-                    });
-        
-                    //socket 연결 해제
-                    socket.on('disconnect', () => {
-                        console.log('user ' + socket.name +  ' leaved');
-                    });
-                  
-                    //메시지 전송
-                    socket.on('send message', (name, text) => {
-                        var msg = name + ' : ' + text;
-                        io.emit('receive message', msg);
-                    });
+                res.send({
+                    'state': 200,
+                    'message': '로그인 상태'
                 });
-                // res.send({
-                //     'state': 200,
-                //     'message': '로그인 상태'
-                // });
             } else {
                 res.send({
                     'state':400,

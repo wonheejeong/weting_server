@@ -53,7 +53,7 @@ server.listen(port ,function(){
 });
 // routes
 // login
-var loginRouter = require('./routes/login/login.js')(io, app,connection);
+var loginRouter = require('./routes/login/login.js')(app,connection);
 var joinRouter = require('./routes/login/join.js')(app,connection);
 
 //myPage
@@ -103,5 +103,3 @@ var chatRouter = require('./routes/chat/chat.js')(io, app, connection);
 var inquiryRouter = require('./routes/chat/inquiry.js')(io, app, connection);
 
 var chatListRouter = require('./routes/chat/chat_list.js')(app, connection);
-
-var socketRouter = require('./routes/chat/socket.js')(io, app);
