@@ -1,4 +1,4 @@
-module.exports = function(app, connection)
+module.exports = function(io, app, connection)
 {
     const crypto = require('crypto');
 

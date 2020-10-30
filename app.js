@@ -53,7 +53,7 @@ server.listen(port ,function(){
 });
 // routes
 // login
-var loginRouter = require('./routes/login/login.js')(app,connection);
+var loginRouter = require('./routes/login/login.js')(io, app,connection);
 var joinRouter = require('./routes/login/join.js')(app,connection);
 
 //myPage
