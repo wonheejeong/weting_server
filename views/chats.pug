@@ -39,6 +39,3 @@ html
       socket.on('create name', function(user_nick_name) => {
         $('#name').val(user_nick_name);
       });
-      socket.on('new user', function(chats){
-        $('#chatLog').append(chats);
-      });

@@ -4,9 +4,7 @@ module.exports = function(io, app) {
 
         io.once('connection', (socket) => {
             console.log('user ' + user_nick_name + ' connected');
-            var chats = '새로운 멤버 ' + user_nick_name + ' 이/가 입장했습니다.\n';
             io.to(socket.id).emit('create name', user_nick_name);
-            io.emit('new user', chats);
 
             socket.on('disconnect', () => {
                 console.log('user disconnected');
