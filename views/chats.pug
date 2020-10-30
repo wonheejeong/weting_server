@@ -25,17 +25,17 @@ html
         button.btn.btn-primary(type='submit') 전송  
       #box.box
     script.
-      var socket = io();
+      var socket = io(); 
       $('#chat').on('submit', function(e){ 
       socket.emit('send message', $('#name').val(), $('#message').val());
       $('#message').val('');
       $('#message').focus();
       e.preventDefault();
       });
-      socket.on('receive message', function(msg){ 
-      $('#chatLog').append(msg + '\n');
-      $('#chatLog').scrollTop($('#chatLog')[0].scrollHeight);
+      socket.on('create name', function(name){ 
+      $('#name').val(name);
       });
-      socket.on('create name', function(user_nick_name) => {
-        $('#name').val(user_nick_name);
+      socket.on('receive message', function(msg){ 
+      $('#chatLog').append(msg+'\n');
+      $('#chatLog').scrollTop($('#chatLog')[0].scrollHeight);
       });

@@ -1,20 +1,23 @@
 module.exports = function(io, app) {
     app.get('/chats/66/:user_nick_name', (req, res) => {
-        var user_nick_name = req.params.user_nick_name;
+        var name = req.params.user_nick_name;
 
-        io.once('connection', (socket) => {
-            console.log('user ' + user_nick_name + ' connected');
-            io.to(socket.id).emit('create name', user_nick_name);
-
-            socket.on('disconnect', () => {
-                console.log('user disconnected');
+        io.on('connection', function(socket){ 
+            socket.name = name;
+            console.log('user connected: ', socket.id);                  
+            io.to(socket.id).emit('create name', name);   
+          
+            socket.on('disconnect', function(){ 
+                console.log('user disconnected: '+ socket.id + ' ' + socket.name);
             });
-            
-            socket.on('send message', (user_nick_name, text) => {
-                var msg = user_nick_name + ' : ' + text;
+      
+            socket.on('send message', function(name, text){ 
+                var msg = name + ' : ' + text;
+                socket.name = name;
+                console.log(msg);
                 io.emit('receive message', msg);
-            });
-        });
+             }); 
+         });
         res.render('chats');
     });
 }
