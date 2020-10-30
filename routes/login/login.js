@@ -8,9 +8,12 @@ module.exports = function(io, app, connection)
         console.log('get /');
             if(req.session.logined) {
                 io.once('connection', (socket) => {
-                    var name = '익명';
-                    socket.name = name;
-                    console.log('socket ' + socket.name + ' connected');
+                    socket.on('connect_user', (user) => {
+                        var name = user;
+                        socket.name = name;
+                        console.log('socket ' + socket.name + ' connected');
+                        io.emit('connect_user', user);
+                    });
         
                     //socket 연결 해제
                     socket.on('disconnect', () => {
