@@ -41,7 +41,7 @@ module.exports = function(io, app, connection){
                                             //채팅방 접속
                                             io.once('connection', (socket) => {
                                                 socket.name = user_nick_name;
-                                                console.log(' socket user connected');
+                                                console.log('socket' + socket.name + 'connected');
 
                                                 //채팅방에 속해있는지 확인
                                                 var select_sql = 'select EXISTS (select * from chatroom where user_nick_name=? and meeting_id=? and is_member=1 and room=?) as success';
@@ -149,7 +149,7 @@ module.exports = function(io, app, connection){
                                                 });
                                             });
                                             //console.log('user connected!');
-                                            //res.render('chat', {meeting_id : meeting_id}); 
+                                            //res.render('chat', {meeting_id : meeting_id}); ㅑ
                                         }
                                         else{
                                             res.json({
