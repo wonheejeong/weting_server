@@ -1,5 +1,5 @@
 module.exports = function(io, app) {
-    app.get('/chats/66/hh', (req, res) => {
+    app.get('/chats/66/:user_nick_name', (req, res) => {
         var user_nick_name = req.params.user_nick_name;
 
         io.once('connection', (socket) => {
