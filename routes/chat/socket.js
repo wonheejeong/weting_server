@@ -3,7 +3,7 @@ module.exports = function(io, app) {
         var user_nick_name = req.params.user_nick_name;
 
         io.once('connection', (socket) => {
-            console.log('user  connected');
+            console.log('user ' + user_nick_name + ' connected');
             var chats = '새로운 멤버 ' + user_nick_name + ' 이/가 입장했습니다.\n';
             io.emit('new user', chats, user_nick_name);
 
