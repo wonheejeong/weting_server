@@ -20,10 +20,9 @@ html
       
       form#chat
         input#room_num.form-contorl(type='hidden')
-        input#name.form-contorl(type='text')
+        input#name.form-contorl(type='hidden')
         input#message.form-contorl(type='text')
         button.btn.btn-primary(type='submit') 전송  
-        
       #box.box
     script.
       var socket = io();
@@ -37,7 +36,9 @@ html
       $('#chatLog').append(msg + '\n');
       $('#chatLog').scrollTop($('#chatLog')[0].scrollHeight);
       });
-      socket.on('new user', function(chats, user_nick_name){
-        $('#chatLog').append(chats);
+      socket.on('create name', function(user_nick_name) => {
         $('#name').val(user_nick_name);
       });
+      socket.on('new user', function(chats){
+        $('#chatLog').append(chats);
+=      });
